@@ -4,11 +4,18 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var morgan = require('morgan');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var projects = require('./routes/projects');
+var config = require('config');
 
 var app = express();
+
+//don't show the log when it is test
+if(config.util.getEnv('NODE_ENV') !== "test") {
+  app.use(morgan('combined'));
+};
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -16,7 +23,8 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(morgan('dev'));
+app.set('supersecret', config.secret);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -24,6 +32,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+
+var middleware = require('./controllers/middleware.js');
+app.use(middleware);
+
+app.use('/projects', projects);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
