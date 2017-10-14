@@ -7,8 +7,4 @@ router.post('/register', function(req, res, next) {
   UserCtrl.register(req,res);
 });
 
-router.post('/authenticate',function(req,res,next){
-  UserCtrl.authenticate(req,res);
-});
-
 module.exports = router;

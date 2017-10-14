@@ -31,11 +31,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
 
 var middleware = require('./controllers/middleware.js');
 app.use(middleware);
 
+app.use('/users', users);
 app.use('/projects', projects);
 
 // catch 404 and forward to error handler
